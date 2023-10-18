@@ -1,4 +1,4 @@
-# Thesis title: Application of Machine Learning Towards Compound Identification through Gas Chromatography Retention Index (RI) and Electron Ionization Mass Spectrometry (EI-MS) Predictions.
+Thesis title: Application of Machine Learning Towards Compound Identification through Gas Chromatography Retention Index (RI) and Electron Ionization Mass Spectrometry (EI-MS) Predictions.
 
 This is the github repo for chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)"
 
@@ -45,7 +45,7 @@ To evaluate the model using new test set
 CUDA_VISIBLE_DEVICES=$device python train/train_test.py -cuda -data $dataset -loss_type mae -max_grad_norm 10 -batch_size 100 -batch_splits 2 -num_epochs 1000 -output_dir output_test/understdnp_transformer -n_rounds 1 -model_type transformer -hidden_size 160 -p_embed -ring_embed -max_path_length 3 -lr 5e-4 -no_share -n_heads 2 -d_k 80 -dropout 0.2
 
 
-# MODEL: EI-MS alpha
+## MODEL: EI-MS alpha
 
 -> Model is placed in the /models/EI-MS_alpha folder
 
@@ -91,8 +91,8 @@ CUDA_VISIBLE_DEVICES=$device python train/train_test.py -cuda -data $dataset -lo
 -> This model is the combination of the NEIMS, MIIP and PA program together. 
 -> The convolution is also scripted in the python file /models/post_processed_models.py
 
-# To build a set of training set tuple with m/z, intensity and subformula:
+To build a set of training set tuple with m/z, intensity and subformula:
 -> annotateNISTgroundEIwithformula.py will be used. This incorporates the annotation tehcniques followed during the peak annotation procedure of PeakAnnotator.
 
-# ALL Data (used in all these experiments are from NIST20 and NIST23 and may be available upon request).
-# ALL Model (generated through these experiments are currently in private mode and may be available upon request).
+ALL Data (used in all these experiments are from NIST20 and NIST23 and may be available upon request).
+ALL Model (generated through these experiments are currently in private mode and may be available upon request).
