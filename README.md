@@ -44,11 +44,11 @@ To evaluate the model using new test set
 CUDA_VISIBLE_DEVICES=$device python train/train_test.py -cuda -data $dataset -loss_type mae -max_grad_norm 10 -batch_size 100 -batch_splits 2 -num_epochs 1000 -output_dir output_test/understdnp_transformer -n_rounds 1 -model_type transformer -hidden_size 160 -p_embed -ring_embed -max_path_length 3 -lr 5e-4 -no_share -n_heads 2 -d_k 80 -dropout 0.2
 
 
-############################################################MODEL: EI-MS alpha########################################################
+###########################MODEL: EI-MS alpha##############################
 -> Model is placed in the /models/EI-MS_alpha folder
 
 
-############################################################MODEL: EI-MS beta#########################################################
+##########################MODEL: EI-MS beta################################
 -> Model is placed in the /models/EI-MS_beta folder
 -> The models created from the high m/z spectra set and the low m/z spectra set are convoluted together.
 
