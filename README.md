@@ -45,6 +45,7 @@ CUDA_VISIBLE_DEVICES=$device python train/train_test.py -cuda -data $dataset -lo
 
 
 ###########################MODEL: EI-MS alpha##############################
+
 Model is placed in the /models/EI-MS_alpha folder
 
 
