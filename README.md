@@ -2,6 +2,7 @@ Thesis title: Application of Machine Learning Towards Compound Identification th
 
 This is the github repo for chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)"
 
+The finalized predictor for EI-MS prediction (called the Adjusted NEIMS with MIIP and PA) achieved a spectral matching score dot product score of 0.621 and outperformed other existing EI-MS predictors by achieving an average spectral correctness of 92.3% and an average spectral coverage of 94% on two held out test sets.
 
 These are the require packages and set up for a conda environment (can be slightly different depending on system).
 
