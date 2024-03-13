@@ -1,4 +1,4 @@
-## Chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)
+## Chapter 3 : Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)
 
 This is the github repo for chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)"
 
