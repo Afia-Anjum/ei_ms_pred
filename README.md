@@ -104,6 +104,7 @@ ALL Model (generated through these experiments are currently in private mode and
 ## This is only the third chapter of the thesis titled as: Application of Machine Learning Towards Compound Identification through Gas Chromatography Retention Index (RI) and Electron Ionization Mass Spectrometry (EI-MS) Predictions.
 
 ## For Chapter 2 of the Thesis, refer to : 
-https://ripred.ca/
+https://ripred.ca/ 
+
 https://www.sciencedirect.com/science/article/pii/S0021967323004028
 
