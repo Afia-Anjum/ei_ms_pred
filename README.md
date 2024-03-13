@@ -1,4 +1,4 @@
-## Thesis Title: Application of Machine Learning Towards Compound Identification through Gas Chromatography Retention Index (RI) and Electron Ionization Mass Spectrometry (EI-MS) Predictions.
+## Chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)
 
 This is the github repo for chapter 3 "Prediction of Electron-Ionization Mass Spectra (EI-MS) by Leveraging Composite Graph Neural Networks (GNN) and a Support Vector Regressor (SVR)"
 
@@ -100,3 +100,10 @@ The convolution is also scripted in the python file /models/post_processed_model
 
 ALL Data (used in all these experiments are from NIST20 and NIST23 and may be available upon request).
 ALL Model (generated through these experiments are currently in private mode and may be available upon request).
+
+## This is only the third chapter of the thesis titled as: Application of Machine Learning Towards Compound Identification through Gas Chromatography Retention Index (RI) and Electron Ionization Mass Spectrometry (EI-MS) Predictions.
+
+## For Chapter 2 of the Thesis, refer to : 
+https://ripred.ca/
+https://www.sciencedirect.com/science/article/pii/S0021967323004028
+
