@@ -377,11 +377,6 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
         else:
             senior_rule_check1=1
         '''
-
-        # print("printing max valency:")
-        # print(max_valency)
-        # senior_rule_check2=0
-
         '''
         if sum_valency>= (2*max_valency):
             senior_rule_check2=0
@@ -393,9 +388,8 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
         else:
             senior_rule_check3=1
         '''
-        # print("first:")
-        # print(senior_rule_check1)
-        ###rough: neutralization done for a charged species which did not pass senior_rule: added one hydrogen(but not into the formula), just for the sake of passing the filter
+
+        ###neutralization done for a charged species which did not pass senior_rule: added one hydrogen(but not into the formula), just for the sake of passing the filter
         if senior_rule_check1 == 1:
             num_of_atoms = 0  # no of atoms having odd valences count
             No_Atoms = 1
@@ -403,40 +397,20 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
             max_valency = 0
             for p in range(len(coins)):
                 No_Atoms = No_Atoms + 1
-                # twice the number of atoms? total num of atoms of each element or just counted once??
-
                 if list1.count(coins[p]) > 0:
                     if valency_coins[p] > max_valency:
                         max_valency = valency_coins[p]
 
-                    # No_Atoms=No_Atoms+(list1.count(coins[p]))
                     if coins[p] == 1:
                         sum_valency = sum_valency + valency_coins[p] * (list1.count(coins[p]) + 1)
                     else:
                         sum_valency = sum_valency + valency_coins[p] * (list1.count(coins[p]))
-                    # print(list1.count(coins[p]))
                     if valency_coins[p] % 2 == 1:
                         if coins[p] == 1:
                             num_of_atoms = num_of_atoms + list1.count(coins[p]) + 1
                         else:
                             num_of_atoms = num_of_atoms + list1.count(coins[p])
 
-        '''
-        if num_of_atoms % 2 == 0 or sum_valency % 2 == 0:
-            senior_rule_check1=0
-        else:
-            senior_rule_check1=1
-        '''
-        # print("senior1:")
-        # print(senior_rule_check1)
-
-        # print("senior2:")
-        # print(senior_rule_check2)
-
-        # elemental ratios check
-        elemental_check_flag = 0
-
-        '''
         denominator=list1.count(12)
         if denominator!=0:
             for p in range(len(coins)):
@@ -473,12 +447,6 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
                             break
         '''
 
-        # print(sum_valency)
-        # print("senior3:")
-        # print(elemental_check_flag)
-        # print(senior_rule_check3)
-        # print(list1)
-
         M_fragments = 0
         for i in range(len(list1)):
             M_fragments = M_fragments + list1[i]
@@ -500,7 +468,7 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
             elif coins[p] == 35 or coins[p] == 19 or coins[p] == 79 or coins[p] == 127:
                 num_Halide = num_Halide + list1.count(coins[p])
 
-        # let's remove to put only charged species:
+        # Removing to put only charged species:
         # if num_C==0:
         #    if num_H==0:
         #        num_H+=1
@@ -557,9 +525,6 @@ def coincombination(amount, index, list1, odd, nitro, M, cfmid_frag_mass, cfmid_
                     f.write(string1)
                     f.write(" ")
                     f.close()
-                # f.write(string1)
-                # f.write("\n")
-                # f.close()
         return
     if amount < 0:
         return
