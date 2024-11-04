@@ -4,8 +4,6 @@ import torch.utils.data as data
 from utils import path_utils
 import pdb
 
-#Afia: change has been applied at various positions going from only labels to MW_labels and MS_labels.
-
 class MolDataset(data.Dataset):
     def __init__(self, raw_data, split_indices, args):
         self.args = args
@@ -19,11 +17,8 @@ class MolDataset(data.Dataset):
         self.data = data
 
     def __getitem__(self, index):
-        #Afia: three things are returned, so catched them
         smiles, MW_label, MS_label = self.data[index]
-        #smiles, label = self.data[index]
         mol = Chem.MolFromSmiles(smiles)
-        print(smiles)
         n_atoms = mol.GetNumAtoms()
 
         path_input = None
