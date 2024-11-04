@@ -17,8 +17,6 @@ def train_model(dataset_loaders, model, optimizer, stat_names, selection_stat,
     for file in [train_output, valid_output, test_output]:
         file.write(','.join(stat_names) + '\n')
 
-    #Afia: loading the pre trained model to resume training from the last saved model:
-
     EPOCH=166
     PATH='%s/model_164' % (args.model_dir)
     LOSS=843967.7940
@@ -27,28 +25,13 @@ def train_model(dataset_loaders, model, optimizer, stat_names, selection_stat,
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     epoch2 = EPOCH
     loss2 = LOSS
-
-    #Afia: loading the pre trained model to resume training from the last saved model:
-
-
-    #counter=5
     patience_counter=2
 
-    #for epoch in range(args.num_epochs):
     for epoch in range(epoch2+1,args.num_epochs):
-        #Afia: change: Dec 6
-        print("Printing patience counter:")
-        print(patience_counter)
-        #will try out different patience: 20, 100, 150(nist paper did it if things did not improve upto 150 epochs in a row) etc
-        #if patience_counter == 20:
         if patience_counter == 100:
             break
 
         args.epoch_num = epoch
-
-        #change_by_Afia
-        #args.lr=args.lr/sqrt(args.epoch_num+1)
-
         train_stats = train_func(
             data_loader=dataset_loaders['train'],
             model=model,
@@ -98,7 +81,6 @@ def train_model(dataset_loaders, model, optimizer, stat_names, selection_stat,
                 best_model_path = model_path
                 save_model = True
 
-        #Afia: change: Dec 6
         if not improved:
             patience_counter=patience_counter+1
 
