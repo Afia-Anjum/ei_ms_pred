@@ -41,9 +41,6 @@ def read_splits(split_path):
         split_indices = line.strip().split(',')[1:]
         split_indices = [int(x) for x in split_indices]
         splits[data_type] = split_indices
-    #change by Afia
-
-    #print(splits)
 
     return splits
 
@@ -63,7 +60,6 @@ def read_smiles_multiclass(data_path):
     smiles_data = []
 
     data_file = open(data_path, 'r')
-    #Afia: so far we have two things in the dataset: MW in [1] and peaks and intensities in [2], need to change
     for line in data_file.readlines():
         smiles = line.strip().split(',')[0]
         MW_labels = line.strip().split(',')[1]
