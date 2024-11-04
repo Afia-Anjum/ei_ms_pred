@@ -141,10 +141,7 @@ class MolGraph:
             self.scope.append((a_offset, len(mol_atoms)))
             a_offset += len(mol_atoms)
 
-    #change_by_Afia
     def get_atom_inputs(self, output_tensors=True):
-
-    #def get_atom_inputs(self, labels_list, output_tensors=True):
 
         """Constructs only the atom inputs for the batch of molecules."""
         fatoms = []
@@ -154,23 +151,6 @@ class MolGraph:
             #print(atoms)
             for atom_idx, atom in enumerate(atoms):
                 atom_features = mol_features.get_atom_features(atom)
-                
-                #print(atom_features.shape)
-                #change_by_Afia
-                #print("Printing atom feature_array:")
-                #print(atom_features)
-                #print(labels_list[mol_idx])
-
-                #change_by_Afia
-                #atom_features[93]=labels_list[mol_idx][1]
-                #atom_features[94]=labels_list[mol_idx][2]
-                #atom_features[95]=labels_list[mol_idx][3]
-                #atom_features[96]=labels_list[mol_idx][4]
-                #atom_features[97]=labels_list[mol_idx][5]
-
-                #print(labels_list[mol_idx][1])
-                #print(atom_features)
-
                 fatoms.append(atom_features)
 
         fatoms = np.stack(fatoms, axis=0)
