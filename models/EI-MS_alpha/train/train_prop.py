@@ -53,13 +53,9 @@ def load_datasets(raw_data, split_idx, args):
     data_splits = data_utils.read_splits('%s/split_%d.txt' % (args.data, split_idx))
     dataset_loaders = {}
     if not args.test_mode:
-        #changed_by_Afia: shuffle=True to False, Oct 13, 2021, very useful when new predictions are done. 
-        #Again changed_by_Afia: shuffle=False to True, Oct 21, 2021, when a new model is trained for EI-MS prediction. changed to original: Oct 24 
 
         dataset_loaders['train'] = get_loader(
             raw_data, data_splits['train'], args, shuffle=True)
-        #dataset_loaders['train'] = get_loader(
-        #    raw_data, data_splits['train'], args, shuffle=False)
         dataset_loaders['valid'] = get_loader(
             raw_data, data_splits['valid'], args, shuffle=False)
     dataset_loaders['test'] = get_loader(
@@ -81,32 +77,13 @@ def scatter_by_anchor_indices(MW_list,pred_logits,n_data):
     m = nn.ReLU()
     data=m(data)
     data_copy=m(data_copy)
-    #print("Printing data before:")
-    #print(data)
-    
-    #print(MW_list)
-    
-    #do I need to empty out the data and replace everything with Zero??
 
     
     for i in range(n_data):
         for j in range(1000):
-            #print("PRINT START:")
-            #print(data[i][j])
             if (MW_list[i] - 1 - j + max_prediction_above_molecule_mass) >= 0:
                 data[i][j]=data_copy[i][MW_list[i] - 1 - j + max_prediction_above_molecule_mass]
-            #print(data[i][j])
-            #print(data_copy[i][MW_list[i] - 1 - j + max_prediction_above_molecule_mass])
 
-    #print("Printing data after:")
-    #print(data)
-    #molecule_mass - j + index_shift
-    #num_data_columns = data.shape
-    #print(num_data_columns)
-    #indices = np.arange(1000)[np.newaxis, ...]
-    #print(indices)
-    
-    #sys.exit()
     return data
 
 def reverse_prediction(n_data,pred_logits,smiles_list):
@@ -118,13 +95,10 @@ def reverse_prediction(n_data,pred_logits,smiles_list):
     return data
 
 def mask_prediction_by_mass(n_data,pred_logits,smiles_list):
-    #print(list(pred_logits.size())[0])
-    #print(ExactMolWt(Chem.MolFromSmiles('CCOC(=O)COC(=O)C(F)(F)Cl')))
     MW_list=[]
     for i in range(len(smiles_list)):
         p=smiles_list[i]
         MW_list.append(int(ExactMolWt(Chem.MolFromSmiles(p))))
-    #print(MW_list)
     for i in range(n_data):
         for j in range(1000):
             if j > (MW_list[i]-1+5):
@@ -135,57 +109,30 @@ def mask_prediction_by_mass(n_data,pred_logits,smiles_list):
     return pred_logits_relued, pred_logits_relued
 
 def make_mass_intensity_pairs(true_logits,MS_labels_list,n_data):
-    #true_logits=pred_logits.clone().detach()
-    #true_logits[true_logits!=0]=0
-    #print(pred_logits)
     for i in range(n_data):
         peak=MS_labels_list[i]
-        #print(peak)
         p=peak.split(";")
         peak_locs=[]
         peak_intensities=[]
         for l in range(len(p)-1):
             loc=int(p[l].split()[0])
             intensity=float(p[l].split()[1])
-            #print(loc)
-            #print(intensity)
-            #print(i)
             true_logits[i][loc]=intensity
-        #print(true_logits[i][loc])
     return true_logits
 
 def make_weights(true_logits):
     num_bins=true_logits.shape[1]
     weights=np.power(np.arange(1, num_bins + 1),0.5)[np.newaxis, :]
-    #print("Printing weights:")
     return weights/np.sum(weights)
 
 def make_loss(pred_logits_relued,true_logits):
-    #print("Printing true:")
-    #print(true_logits.size())
-    #print("Printing pred_logits:")
-    #print(pred_logits_relued.size())
     weights=make_weights(true_logits)
-    #print("Printing weights")
-    #print(weights.shape)
     a=torch.abs(pred_logits_relued - true_logits)
     a=a*a
     weights=weights.argmax()
     weighted_square_error=a*weights
-    #print(weighted_square_error.size())
     t=torch.mean(weighted_square_error)
-    #print(t)
     return t
-    #previously working wrong version
-    #weights=make_weights(true_logits)
-    #print("Printing weights")
-    #a=true_logits-pred_logits_relued
-    #a=a*a    
-    #np_arr_a = a.cpu().detach().numpy()
-    #weights=np.transpose(weights)
-    #loss=np.mean(weighted_square_error.reshape(-1))
-    #t=torch.from_numpy(np.asarray(loss))
-    #return t
         
 def main():
     args = get_args()
@@ -195,9 +142,6 @@ def main():
 
     if args.multi:
         raw_data = data_utils.read_smiles_multiclass('%s/raw.csv' % args.data)
-        #the output raw_data is coming from data_utils.py file where the returned values are in the format: smiles_data.append((smiles, MW_labels, MS_labels))
-        #Afia: number of classes will change to 1000(max peak loc).
-        #n_classes = len(raw_data[0][1])
         n_classes = 1000
     else:
         raw_data = data_utils.read_smiles_from_file('%s/raw.csv' % args.data)
@@ -211,7 +155,6 @@ def main():
         agg_stats += ['acc', 'auc']
     elif args.loss_type == 'mae':
         agg_stats += ['mae']
-    #Afia: added a new type of loss specifically for our prediction results. In paper it's written that the loss is a modified mean squared error.
     elif args.loss_type == 'generalized_mse':
         agg_stats += ['generalized_mse']
 
@@ -297,11 +240,6 @@ def run_epoch(data_loader, model, optimizer, stat_names, args, mode,
     prop_predictor = model
     prop_predictor.train() if training else prop_predictor.eval()
     
-    #change_by_Afia
-    #for g in optimizer.param_groups:
-    #    g['lr'] = g['lr']/sqrt(prop_predictor.current_epoch)
-    
-    #print(g['lr'])
     if write_path is not None:
         write_file = open(write_path, 'w+')
     stats_tracker = data_utils.stats_tracker(stat_names)
@@ -313,7 +251,6 @@ def run_epoch(data_loader, model, optimizer, stat_names, args, mode,
             optimizer.zero_grad()
         batch_split_idx += 1
 
-        #Afia: changed labels_list to MW and MS
 
         smiles_list, MW_labels_list, MS_labels_list, path_tuple = batch_data
 
@@ -327,73 +264,15 @@ def run_epoch(data_loader, model, optimizer, stat_names, args, mode,
         mol_graph = MolGraph(smiles_list, args, path_input, path_mask)
 
         pred_logits = prop_predictor(mol_graph, stats_tracker).squeeze(1)
-               
-        #print("Printing the type of pred_logits:")
-        #print(type(pred_logits))
-        #print(list(pred_logits.size())[0])
-        #print(pred_logits)
-        #print(pred_logits.size())
         
         
-        #Afia: adding it  # for backward:
-        
-        #g = nn.Sigmoid()
-        #gate=g(pred_logits)
-
-        #data=reverse_prediction(n_data,pred_logits,smiles_list)
-
-        #Afia: adding it  # for forward
         pred_logits,pred_logits_relued=mask_prediction_by_mass(n_data,pred_logits,smiles_list)
         
-        #raw_prediction = (gate * pred_logits + (1. - gate) * data)
-        #gate*pred_logits 
-        #raw_prediction2= 1. - gate
-        #raw_prediction3=raw_prediction2*data
-        #(gate * pred_logits + (1. - gate) * data)
-        
-        #print("Printing raw prediction concatenation:")
-        #print(gate)
-        #print(raw_prediction)
-        #print(raw_prediction3)
-        #print(pred_logits)
-        
-        #pred_logits=raw_prediction
-        
-        #print(pred_logits)
-        #sys.exit()
 
-        #print(pred_logits)
-        #print("Printing size of pred logits:")
-        #print(pred_logits.size())
-        #print(pred_logits_relued)
-        #print(pred_logits_relued.size())
-        
-        #print(pred_logits_relued)
-        #predicted=pred_logits.tolist()
-        
-        #print(MS_labels_list[0])
-        #true_logits=make_mass_intensity_pairs(pred_logits,MS_labels_list,n_data)
-        #print(true_logits[0][12])
-        #print(true_logits[0][13])
-        #print(true_logits[0][14])
-        #print(true_logits[0][15])
-        #print(true_logits.size())
-                
-        #Afia: checked upto here
         
         true_logits=torch.zeros((n_data,1000), dtype=torch.float64, device = args.device)
         true_logits=make_mass_intensity_pairs(true_logits,MS_labels_list,n_data)
-        #print("Printing true_logits")
-        #print(type(true_logits))
-        #print(type(pred_logits))
-        #print(true_logits.size())
 
-        #MS_labels = torch.tensor(MS_labels_list, device=args.device) 
-        #print("Size of MS_labels:")
-        #print(MS_labels_list[0]) 
-        #New thing to implement:
-        #declare a tensor of the desired size(same as of pred_logits, supply the argument device=args.device during initialization)
-        #replace the value from MS_labels_list to there. #check whether or not it solves your problem.if necessary make a new function.
 
         if args.loss_type == 'ce':  # memory issues
             all_pred_logits.append(pred_logits)
@@ -410,12 +289,8 @@ def run_epoch(data_loader, model, optimizer, stat_names, args, mode,
             assert(False)
         
         
-        #print("Printing loss before:")
-        #print(loss)
         stats_tracker.add_stat('loss', loss.item() * n_data, n_data)
-        #stats_tracker.add_stat('loss', loss * n_data, n_data)
         loss = loss / args.batch_splits
-        #print(args.batch_splits)
 
         if args.loss_type == 'mae':
             mae = torch.mean(torch.abs(pred_logits - labels))
@@ -426,25 +301,13 @@ def run_epoch(data_loader, model, optimizer, stat_names, args, mode,
             stats_tracker.add_stat('generalized_mse', generalized_mse.item() * n_data, n_data)
 
 
-
-        #loss.requires_grad = True
-        #print("Printing loss before:")
-        #print(loss)
         if training:
-            #loss.retain_grad() #not sure if I should use this?
             loss.backward()
-            #print(model.W_p_o.weight.grad)  #Afia: here the output should not be None. here mine is showing None, something is broken, changed it, now it's not None
-            #print(model.embs[0].weight.grad)
-            #print("Inside if")
-            #print(loss)
-            #sys.exit()
             if batch_split_idx % args.batch_splits == 0:
                 train_utils.backprop_grads(
                     prop_predictor, optimizer, stats_tracker, args)
                 batch_split_idx = 0
-        #print(write_path)
         if write_path is not None:
-            #Afia: maybe need to change here:
             write_utils.write_props(write_file, smiles_list, MS_labels_list,
                                     pred_logits.cpu().numpy())
 
