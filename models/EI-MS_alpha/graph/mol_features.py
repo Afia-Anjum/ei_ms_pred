@@ -50,14 +50,6 @@ N_ATOM_FEATS = (len(SYMBOLS) + len(FORMAL_CHARGES) + len(DEGREES) +
 N_BOND_FEATS = len(BOND_TYPES) + 1 + 1
 
 
-#change_by_Afia
-#N_OTHER_FEATS = 5  #logp, exactmass,apol, bpol, classyfire superclass
-
-#change_by_Afia
-#N_ATOM_FEATS = N_ATOM_FEATS + N_OTHER_FEATS 
-
-
-
 def get_bt_index(bond_type):
     """Returns the feature index for a particular bond type.
 
@@ -95,18 +87,7 @@ def get_atom_features(atom):
         exp_valence = onek_unk_encoding(atom.exp_valence, EXPLICIT_VALENCES)
         imp_valence = onek_unk_encoding(atom.imp_valence, IMPLICIT_VALENCES)
         aro = [atom.aro]
-
-        #change by Afia
-        #other_feats=[0.0,0.0,0.0,0.0,0.0]
         feature_array = symbol + fc + degree + exp_valence + imp_valence + aro
-
-        #change_by_Afia
-        #feature_array = symbol + fc + degree + exp_valence + imp_valence + aro + other_feats
-
-    
-    #change_by_Afia
-    #print("Printing atom feature_array:")
-    #print(feature_array)
 
     return np.array(feature_array)
 
