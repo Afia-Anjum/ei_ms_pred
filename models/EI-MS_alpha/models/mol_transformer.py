@@ -15,18 +15,7 @@ class MolTransformer(nn.Module):
         n_heads, d_k = args.n_heads, args.d_k
 
         n_atom_feats = mol_features.N_ATOM_FEATS
-
-        #change_by_Afia
-        #n_other_feats = mol_features.N_OTHER_FEATS
-        #n_atom_feats=n_atom_feats + n_other_feats
-
         n_path_feats = path_utils.get_num_path_features(args)
-
-        #change_by_Afia
-        #print("Printing n_atom_feat:")
-        #print(n_atom_feats)
-        #print("Printing n_path_feats:")
-        #print(n_path_feats)
 
         # W_atom_i: input atom embedding
         self.W_atom_i = nn.Linear(n_atom_feats, n_heads * d_k, bias=False)
@@ -98,15 +87,8 @@ class MolTransformer(nn.Module):
             attn_probs = torch.mean(attn_probs, dim=0)
         return attn_probs
 
-    #change_of_Afia
     def forward(self, mol_graph, stats_tracker=None):
-
-    #def forward(self, mol_graph, labels_list, stats_tracker=None):
         atom_input, scope = mol_graph.get_atom_inputs()
-
-        #change_by_Afia
-        #atom_input, scope = mol_graph.get_atom_inputs(labels_list)
-
         max_atoms = model_utils.compute_max_atoms(scope)
         atom_input_3D, atom_mask = model_utils.convert_to_3D(
             atom_input, scope, max_atoms, self.args.device, self.args.self_attn)
@@ -115,8 +97,6 @@ class MolTransformer(nn.Module):
         batch_sz, _, _ = atom_input_3D.size()
         n_heads, d_k = self.args.n_heads, self.args.d_k
 
-        # Atom mask allows all valid atoms
-        # Path mask allows only atoms in the neighborhood
         if self.args.mask_neigh:
             attn_mask = path_mask
         else:
